@@ -1,13 +1,22 @@
 from flask import Flask
 from datetime import datetime
+import ConfigParser
 import requests
 import time
 import json
 
 
 app = Flask(__name__)
-api_key = '2b36c7eb96dc4b60c8788a693c2b3cc0'
-url = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=Montreal&APPID={api_key}'.format(api_key=api_key)
+api_key = ''
+url = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=Montreal&APPID={api_key}'
+
+def init():
+   Config = ConfigParser.ConfigParser()
+   Config.read("configuration/config")
+   Config.sections()
+
+   config_api_key = Config.get('OpenWeather', 'api_key')
+   url = url.format(api_key=config_api_key)
 
 
 class Weather(object):
@@ -56,5 +65,6 @@ def post_mattermost(data):
     requests.post(mattermostUrl, data=json.dumps(payload), verify=False)
 
 if __name__ == '__main__':
+    init()
     app.run(debug=True)
 
