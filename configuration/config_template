@@ -1,5 +1,5 @@
 [OpenWeather]
-APIKey:
+api_key:
 
 [Mattermost]
-URL:
+url:
