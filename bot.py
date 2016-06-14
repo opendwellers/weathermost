@@ -42,14 +42,10 @@ def get_day_weather_line(day):
     day_month = datetime.fromtimestamp(day['dt']).strftime("%b")
     day_day = datetime.fromtimestamp(day['dt']).strftime("%d")
     day_info_date = """{weekday}, {month}. {day_number}""".ljust(25).format(weekday=day_weekday, month=day_month, day_number=day_day)
-    #print(day_info_date)
     day_desc = day['weather'][0]['description']
     day_desc.ljust(50)
-    #print(day_desc)
     day_temp_high = int(day['temp']['max'] - 273.15)
-    #print(day_temp_high)
     day_temp_low = int(day['temp']['min'] - 273.15)
-    #print(day_temp_low)
     day_icon = get_embedded_icon_url(day['weather'][0]['icon'], day_desc)
     return "| {day_info_date_param} | {desc_param}  {day_icon_param} | {day_temp_high_param} °C | {day_temp_low_param} °C  |\n".format(day_info_date_param=day_info_date, desc_param=day_desc, day_icon_param=day_icon, day_temp_high_param=day_temp_high, day_temp_low_param=day_temp_low)
 
