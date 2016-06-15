@@ -65,7 +65,7 @@ def post_mattermost(data):
     payload_text += "---"
     print(payload_text)
 
-    payload = {"response_type": "in_channel", "text": payload_text}
+    payload = {"response_type": "in_channel", "username": "weathermost", "text": payload_text}
 
     requests.post(mattermost_url, data=json.dumps(payload), verify=False)
 
