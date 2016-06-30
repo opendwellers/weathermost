@@ -20,7 +20,6 @@ def init():
 
     config_api_key = Config.get('OpenWeather', 'api_key')
     url = url(key=config_api_key)
-    app.config['SERVER_NAME'] = Config.get('Bot', 'server_name')
 
     mattermost_url = Config.get('Mattermost', 'url')
 

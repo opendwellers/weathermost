@@ -12,6 +12,8 @@ RUN pip install flask requests\
     && rm v${version}.tar.gz \
     && mv weathermost-${version} weathermost
 
+EXPOSE 5000
+
 VOLUME /weathermost/
 
 ENTRYPOINT ["python", "weathermost/bot.py"]
