@@ -3,3 +3,6 @@ api_key:
 
 [Mattermost]
 url:
+
+[Bot]
+server_name:

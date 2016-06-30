@@ -1,7 +1,7 @@
 FROM python:3.4
 MAINTAINER Patrick G. <patrick.pollo.guilbert@gmail.com>
 
-ENV version 0.1
+ENV version 0.2
 
 WORKDIR /weathermost
 
@@ -12,6 +12,6 @@ RUN pip install flask requests\
     && rm v${version}.tar.gz \
     && mv weathermost-${version} weathermost
 
-VOLUME weathermost/configuration
+VOLUME /weathermost/
 
 ENTRYPOINT ["python", "weathermost/bot.py"]

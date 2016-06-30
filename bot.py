@@ -20,6 +20,7 @@ def init():
 
     config_api_key = Config.get('OpenWeather', 'api_key')
     url = url(key=config_api_key)
+    app.config['SERVER_NAME'] = Config.get('Bot', 'server_name')
 
     mattermost_url = Config.get('Mattermost', 'url')
 
@@ -65,7 +66,7 @@ def post_mattermost(data):
     payload_text += "---"
     print(payload_text)
 
-    payload = {"response_type": "in_channel", "username": "weathermost", "text": payload_text}
+    payload = {"response_type": "in_channel", "icon_url": "http://i.imgur.com/MfsRf1P.png", "username": "weathermost", "text": payload_text}
 
     requests.post(mattermost_url, data=json.dumps(payload), verify=False)
 
