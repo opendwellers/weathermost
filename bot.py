@@ -28,7 +28,7 @@ def get_weather():
     """
     r = requests.get(url)
     payload_text = build_response_text(r.json())
-    data = {'text' : payload_text}
+    data = {'username': 'Weather bot', 'text' : payload_text}
     js = json.dumps(data)
 
     resp = Response(js, status=200, mimetype='application/json')
