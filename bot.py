@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import Response
 from datetime import datetime
 import configparser 
 import requests
@@ -8,12 +9,10 @@ import json
 
 app = Flask(__name__)
 url = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Montreal&APPID={key}&cnt=5".format
-mattermost_url = ""
 
 def init():
     """Initializes variables"""
     global url
-    global mattermost_url
     Config = configparser.ConfigParser()
     Config.read("configuration/config")
     Config.sections()
@@ -21,7 +20,6 @@ def init():
     config_api_key = Config.get('OpenWeather', 'api_key')
     url = url(key=config_api_key)
 
-    mattermost_url = Config.get('Mattermost', 'url')
 
 @app.route('/weather', methods=['POST'])
 def get_weather():
@@ -29,8 +27,12 @@ def get_weather():
     TODO add option to choose city with /weather toronto
     """
     r = requests.get(url)
-    post_mattermost(r.json())
-    return
+    payload_text = build_response_text(r.json())
+    data = {'text' : payload_text}
+    js = json.dumps(data)
+
+    resp = Response(js, status=200, mimetype='application/json')
+    return resp
 
 def get_embedded_icon_url(icon_code, desc):
     """Returns a formatted markdown line to show the weather icon"""
@@ -49,8 +51,7 @@ def get_day_weather_line(day):
     day_icon = get_embedded_icon_url(day['weather'][0]['icon'], day_desc)
     return "| {day_info_date_param} | {desc_param}  {day_icon_param} | {day_temp_high_param} °C | {day_temp_low_param} °C  |\n".format(day_info_date_param=day_info_date, desc_param=day_desc, day_icon_param=day_icon, day_temp_high_param=day_temp_high, day_temp_low_param=day_temp_low)
 
-
-def post_mattermost(data):
+def build_response_text(data):
     """Post formatted data to mattermost instance"""
     days = []
     payload_text = """
@@ -60,14 +61,11 @@ def post_mattermost(data):
 | Day | Description | High | Low |
 |:---------------------------|:------------------------------------|:--------|:--------|\n"""
     for day in data['list']:
-        #print(get_day_weather_line(day))
         payload_text += get_day_weather_line(day)
     payload_text += "---"
     print(payload_text)
 
-    payload = {"response_type": "in_channel", "icon_url": "http://i.imgur.com/MfsRf1P.png", "username": "weathermost", "text": payload_text}
-
-    requests.post(mattermost_url, data=json.dumps(payload), verify=False)
+    return payload_text
 
 if __name__ == '__main__':
     init()
